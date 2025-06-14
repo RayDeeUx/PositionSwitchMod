@@ -9,13 +9,13 @@ LevelManager::LevelManager() {
             auto index = _res.find("{");
             if (index == std::string::npos) return;
             auto _result = _res.substr(index);
-            auto result = matjson::parse(_result.substr(0, _result.length() - 2));
-            auto rows = result["table"]["rows"].as_array();
+            auto result = matjson::parse(_result.substr(0, _result.length() - 2)).unwrapOr(matjson::makeObject({ {"table", { {"rows", [] } }} }));
+            auto rows = result["table"].unwrap()["rows"].as_array().unwrap();
             for (auto& row : rows) {
-                auto contents = row["c"].as_array();
+                auto contents = row["c"].as_array().unwrap();
                 
-                auto levelName = geode::utils::string::toLower(contents[0]["v"].as_string());
-                auto levelID = contents[1]["f"].as_string();
+                auto levelName = geode::utils::string::toLower(contents[0]["v"].as_string().unwrap());
+                auto levelID = contents[1]["f"].as_string().unwrap();
                 levels[levelName] = levelID;
             }
             // log::info("levels inserted! length: {}", levels.size());
