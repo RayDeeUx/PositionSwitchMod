@@ -15,7 +15,7 @@ class $modify(MyInfoLayer, LevelInfoLayer) {
 
 		auto mapOfLevels = LevelManager::get().levels;
 		auto levelName = geode::utils::string::toLower(level->m_levelName);
-		auto hasLevel = mapOfLevels.contains(levelName) && mapOfLevels.find(levelName)->second != level->m_levelID.value();
+		auto hasLevel = mapOfLevels.contains(levelName) && geode::utils::numFromString<int>(mapOfLevels.find(levelName)->second).unwrapOr(-1) != level->m_levelID.value();
 		if (hasLevel) {
 			auto startPosSprite = CCSprite::create("startpos-btn.png"_spr);
 			startPosSprite->setScale(0.625);
