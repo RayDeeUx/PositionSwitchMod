@@ -41,8 +41,10 @@ LevelManager::LevelManager() {
                 }
                 
                 auto levelName = geode::utils::string::toLower(contents[0]["v"].asString());
+                if (levelName.isErr()) return log::info("levelName could not be parded into a string... So sad :(");
                 auto levelID = contents[1]["f"].asString();
-                levels[levelName] = levelID;
+                if (levelID.isErr()) return log::info("levelID could not be parded into a string... So sad :(");
+                levels[levelName.unwrap()] = levelID.unwrap();
             }
             
         } else if (web::WebProgress* p = e->getProgress()) {
