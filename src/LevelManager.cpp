@@ -28,14 +28,15 @@ LevelManager::LevelManager() {
                     log::info("this row does not have a 'c' key... So sad :(");
                     continue;
                 }
-                auto contents = row["c"].asArray();
-                if (contents.isErr() || contents.size() < 2) {
-                    log::info("this row's contents were not formed into an array OR has fewer than two elements... So sad :(");
+                auto stillWrappedContents = row["c"].asArray();
+                if (stillWrappedContents.isErr()) {
+                    log::info("this row's contents were not formed into an array... So sad :(");
                     continue;
                 }
 
-                if (!contents[0].contains("v") || !contents[1].contains("f")) {
-                    log::info("this row's contents have no name OR no level ID... So sad :(");
+                auto contents = stillWrappedContents.unwrap();
+                if (contents.size() < 2 || !contents[0].contains("v") || !contents[1].contains("f")) {
+                    log::info("this row's has fewer than two elements OR has no level name OR no level ID... So sad :(");
                     continue;
                 }
                 
