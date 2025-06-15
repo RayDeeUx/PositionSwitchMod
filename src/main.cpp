@@ -5,25 +5,17 @@
 
 using namespace geode::prelude;
 
-class $modify(MyMenuLayer, MenuLayer) {
-	bool init() {
-		if (!MenuLayer::init()) {
-			return false;
-		}
-
-		LevelManager::get(); // inititalizes the list on startup
-
-		return true;
-	}
-};
+$on_mod(Loaded) {
+	LevelManager::get(); // inititalizes the list on startup
+}
 
 class $modify(MyInfoLayer, LevelInfoLayer) {
 	bool init(GJGameLevel* level, bool challenge) {
 		if (!LevelInfoLayer::init(level, challenge)) return false;
 
-		auto hasLevel = LevelManager::get().levels.contains(
-			geode::utils::string::toLower(level->m_levelName)
-		);
+		auto mapOfLevels = LevelManager::get().levels;
+		auto levelName = geode::utils::string::toLower(level->m_levelName);
+		auto hasLevel = mapOfLevels.contains(levelName) && mapOfLevels.find(levelName)->second != level->m_levelID.value();
 		if (hasLevel) {
 			auto startPosSprite = CCSprite::create("startpos-btn.png"_spr);
 			startPosSprite->setScale(0.625);
