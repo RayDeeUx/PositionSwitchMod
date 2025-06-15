@@ -14,10 +14,9 @@ class $modify(MyInfoLayer, LevelInfoLayer) {
 		if (!LevelInfoLayer::init(level, challenge)) return false;
 
 		auto startPosLevels = LevelManager::get().levels;
+		auto levelName = geode::utils::string::toLower(level->m_levelName);
 		auto hasStartPosCounterpart = startPosLevels.contains(levelName);
 		if (!hasStartPosCounterpart) return true;
-
-		auto levelName = geode::utils::string::toLower(level->m_levelName);
 		auto parsedStartPosLevelID = geode::utils::numFromString<int>(mapOfLevels.find(levelName)->second).unwrapOr(-1);
 		auto isNotStartPosLevel = parsedStartPosLevelID != level->m_levelID.value();
 		auto hasLevel = hasStartPosCounterpart && isNotStartPosLevel;
